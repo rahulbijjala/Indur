@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FreshMart - Grocery Delivery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f5f5;
+        }
+        
+        /* Navigation Bar */
+        .nav-container {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 15px 0;
+            background-color: white;
+            border-bottom: 1px solid #f0f0f0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .nav-icon {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 5px;
+        }
+        
+        .nav-text {
+            font-size: 12px;
+            color: #212121;
+            font-weight: 500;
+        }
+        
+        .dairy-icon {
+            color: #2874f0;
+            font-weight: bold;
+            font-size: 16px;
+        }
+        
+        /* Dairy Page */
+        #dairy-page {
+            background-color: #fff9c4;
+            margin-top: 70px;
+            padding: 20px;
+            min-height: calc(100vh - 70px);
+        }
+        
+        .dairy-content {
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        
+        .page-title {
+            font-size: 20px;
+            margin-bottom: 20px;
+            color: #333;
+        }
+        
+        .dairy-feature {
+            background-color: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .dairy-feature h3 {
+            margin-bottom: 10px;
+            color: #2e7d32;
+        }
+        
+        .dairy-btn {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        
+        .dairy-btn:hover {
+            background-color: #1b5e20;
+        }
+        
+        /* Other Pages */
+        .content {
+            margin-top: 70px;
+            padding: 15px;
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .product-image {
+            width: 100%;
+            height: 120px;
+            object-fit: cover;
+        }
+        
+        .product-details {
+            padding: 10px;
+        }
+        
+        .product-name {
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #333;
+        }
+        
+        .product-price {
+            font-weight: bold;
+            color: #2874f0;
+            margin-bottom: 10px;
+        }
+        
+        .add-to-cart {
+            background-color: #2874f0;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        .add-to-cart:hover {
+            background-color: #1a5cb8;
+        }
+        
+        /* Cart Indicator */
+        .cart-count {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #2874f0;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+            z-index: 90;
+        }
+        
+        /* Hidden class for page switching */
+        .hidden {
+            display: none;
+        }
+
+        /* Enhanced Cart Styles */
+        .empty-cart {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .empty-cart-icon {
+            font-size: 50px;
+            margin-bottom: 15px;
+        }
+
+        .empty-cart-message {
+            font-size: 16px;
+            margin-bottom: 20px;
+            color: #666;
+        }
+
+        .continue-shopping {
+            background-color: #2874f0;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .cart-item {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .cart-item-image {
+            width: 60px;
+            height: 60px;
+            margin-right: 10px;
+        }
+
+        .cart-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .cart-item-details {
+            flex-grow: 1;
+        }
+
+        .cart-item-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+        }
+
+        .quantity-button {
+            background-color: #f0f0f0;
+            border: none;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .quantity {
+            margin: 0 10px;
+        }
+
+        .coupon-section {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .coupon-header {
+            margin-bottom: 10px;
+        }
+
+        .coupon-title {
+            font-weight: bold;
+        }
+
+        .apply-coupon {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .coupon-input {
+            flex-grow: 1;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .apply-button {
+            background-color: #2874f0;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 0 4px 4px 0;
+            cursor: pointer;
+        }
+
+        .coupon-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .coupon-details {
+            margin-left: 10px;
+        }
+
+        .coupon-code {
+            font-weight: bold;
+        }
+
+        .coupon-description {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .cart-summary {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+        }
+
+        .summary-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .total-row {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #ddd;
+            font-weight: bold;
+        }
+
+        .checkout-button {
+            background-color: #2e7d32;
+            color: white;
+            border: none;
+            padding: 12px;
+            width: 100%;
+            border-radius: 4px;
+            margin-top: 15px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="nav-container">
+        <a href="#" class="nav-item" onclick="showPage('dairy')">
+            <div class="dairy-icon">Dairy</div>
+        </a>
+        
+        <a href="#" class="nav-item" onclick="showPage('vegetables')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path fill="#2874f0" d="M18.06 22.99h1.66c.84 0 1.53-.64 1.63-1.46L23 5.05h-5V1h-1.97v4.05h-4.97l.3 2.34c1.71.47 3.31 1.32 4.27 2.26 1.44 1.42 2.43 2.89 2.43 5.29v8.05zM1 21.99V21h15.03v.99c0 .55-.45 1-1.01 1H2.01c-.56 0-1.01-.45-1.01-1zm15.03-7c0-8-15.03-8-15.03 0h15.03zM1.02 17h15v2h-15z"/>
+            </svg>
+            <div class="nav-text">Vegetables</div>
+        </a>
+        
+        <a href="#" class="nav-item" onclick="showPage('grocery')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path fill="#2874f0" d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
+            </svg>
+            <div class="nav-text">Grocery</div>
+        </a>
+        
+        <a href="#" class="nav-item" onclick="showPage('pay')">
+            <svg class="nav-icon" viewBox="0 0 24 24">
+                <path fill="#2874f0" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm.31-8.86c-1.77-.45-2.34-.94-2.34-1.67 0-.84.79-1.43 2.1-1.43 1.38 0 1.9.66 1.94 1.64h1.71c-.05-1.34-.87-2.57-2.49-2.97V5H10.9v1.69c-1.51.32-2.72 1.3-2.72 2.81 0 1.79 1.49 2.69 3.66 3.21 1.95.46 2.34 1.15 2.34 1.87 0 .53-.39 1.39-2.1 1.39-1.6 0-2.23-.72-2.32-1.64H8.04c.1 1.7 1.36 2.66 2.86 2.97V19h2.34v-1.67c1.52-.29 2.72-1.16 2.73-2.77-.01-2.2-1.9-2.96-3.66-3.42z"/>
+            </svg>
+            <div class="nav-text">Pay</div>
+        </a>
+    </div>
+
+    <!-- Dairy Page -->
+    <div id="dairy-page" class="content">
+        <div class="dairy-content">
+            <h1 class="page-title">Dairy Specials</h1>
+            
+            <div class="dairy-feature">
+                <h3>Daily Fresh Milk Delivery</h3>
+                <p>Get fresh milk delivered to your doorstep every morning before 7 AM.</p>
+                <button class="dairy-btn" onclick="addToCart(101)">Subscribe Now</button>
+            </div>
+            
+            <div class="dairy-feature">
+                <h3>Organic Dairy Products</h3>
+                <p>Explore our range of organic dairy products from trusted farms.</p>
+                <button class="dairy-btn" onclick="addToCart(102)">View Products</button>
+            </div>
+            
+            <div class="dairy-feature">
+                <h3>Cheese Lover's Combo</h3>
+                <p>Special discount on our cheese selection pack - 5 varieties for ₹499.</p>
+                <button class="dairy-btn" onclick="addToCart(103)">Buy Now</button>
+            </div>
+            
+            <div class="dairy-feature">
+                <h3>Dairy Recipes</h3>
+                <p>Discover delicious recipes you can make with our dairy products.</p>
+                <button class="dairy-btn" onclick="addToCart(104)">View Recipes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Vegetables Page -->
+    <div id="vegetables-page" class="content hidden">
+        <h1 class="page-title">Fresh Vegetables</h1>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Tomato" alt="Tomatoes" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Tomatoes (1kg)</h3>
+                    <p class="product-price">₹30</p>
+                    <button class="add-to-cart" onclick="addToCart(1)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Potato" alt="Potatoes" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Potatoes (1kg)</h3>
+                    <p class="product-price">₹25</p>
+                    <button class="add-to-cart" onclick="addToCart(2)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Onion" alt="Onions" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Onions (1kg)</h3>
+                    <p class="product-price">₹40</p>
+                    <button class="add-to-cart" onclick="addToCart(3)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Carrot" alt="Carrots" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Carrots (1kg)</h3>
+                    <p class="product-price">₹35</p>
+                    <button class="add-to-cart" onclick="addToCart(4)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Grocery Page -->
+    <div id="grocery-page" class="content hidden">
+        <h1 class="page-title">Grocery Items</h1>
+        <div class="products-grid">
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Rice" alt="Rice" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Basmati Rice (1kg)</h3>
+                    <p class="product-price">₹80</p>
+                    <button class="add-to-cart" onclick="addToCart(5)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Wheat" alt="Wheat" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Wheat Flour (1kg)</h3>
+                    <p class="product-price">₹45</p>
+                    <button class="add-to-cart" onclick="addToCart(6)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Sugar" alt="Sugar" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Sugar (1kg)</h3>
+                    <p class="product-price">₹42</p>
+                    <button class="add-to-cart" onclick="addToCart(7)">Add to Cart</button>
+                </div>
+            </div>
+            <div class="product-card">
+                <img src="https://via.placeholder.com/150?text=Oil" alt="Oil" class="product-image">
+                <div class="product-details">
+                    <h3 class="product-name">Sunflower Oil (1L)</h3>
+                    <p class="product-price">₹110</p>
+                    <button class="add-to-cart" onclick="addToCart(8)">Add to Cart</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pay Page -->
+    <div id="pay-page" class="content hidden">
+        <h1 class="page-title">Payment</h1>
+        <div id="cart-container" style="background: white; padding: 20px; border-radius: 8px;">
+            <!-- Cart content will be dynamically inserted here -->
+        </div>
+    </div>
+
+    <!-- Cart Counter -->
+    <div id="cart-counter" class="cart-count hidden">0</div>
+
+    <script>
+        // Product data
+        const products = [
+            { id: 1, name: "Tomatoes (1kg)", price: 30, image: "https://via.placeholder.com/150?text=Tomato" },
+            { id: 2, name: "Potatoes (1kg)", price: 25, image: "https://via.placeholder.com/150?text=Potato" },
+            { id: 3, name: "Onions (1kg)", price: 40, image: "https://via.placeholder.com/150?text=Onion" },
+            { id: 4, name: "Carrots (1kg)", price: 35, image: "https://via.placeholder.com/150?text=Carrot" },
+            { id: 5, name: "Basmati Rice (1kg)", price: 80, image: "https://via.placeholder.com/150?text=Rice" },
+            { id: 6, name: "Wheat Flour (1kg)", price: 45, image: "https://via.placeholder.com/150?text=Wheat" },
+            { id: 7, name: "Sugar (1kg)", price: 42, image: "https://via.placeholder.com/150?text=Sugar" },
+            { id: 8, name: "Sunflower Oil (1L)", price: 110, image: "https://via.placeholder.com/150?text=Oil" },
+            { id: 101, name: "Daily Milk Subscription", price: 499, image: "https://via.placeholder.com/150?text=Milk" },
+            { id: 102, name: "Organic Dairy Pack", price: 399, image: "https://via.placeholder.com/150?text=Organic" },
+            { id: 103, name: "Cheese Lover's Combo", price: 499, image: "https://via.placeholder.com/150?text=Cheese" },
+            { id: 104, name: "Dairy Recipe Book", price: 199, image: "https://via.placeholder.com/150?text=Book" }
+        ];
+
+        // Coupon data
+        const coupons = [
+            { code: "WELCOME10", description: "10% off on first order", discount: 50 },
+            { code: "FREESHIP", description: "Free delivery on orders above ₹200", discount: 40 },
+            { code: "BIG50", description: "₹50 off on orders above ₹500", discount: 50 }
+        ];
+
+        // Address data
+        const savedAddresses = [
+            {
+                type: "Home",
+                name: "John Doe",
+                mobile: "9876543210",
+                address: "123 Main St, Apt 4B, Bangalore, Karnataka 560001"
+            },
+            {
+                type: "Work",
+                name: "John Doe",
+                mobile: "9876543210",
+                address: "456 Office Park, 3rd Floor, Bangalore, Karnataka 560002"
+            }
+        ];
+
+        // Cart and state variables
+        let cart = [];
+        let selectedCoupon = null;
+        let selectedPaymentMethod = "cod";
+        let selectedAddress = null;
+
+        // Show the initial page
+        showPage('dairy');
+        
+        // Function to show a specific page
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.content').forEach(page => {
+                page.classList.add('hidden');
+            });
+            
+            // Show the selected page
+            document.getElementById(pageId + '-page').classList.remove('hidden');
+            
+            // If it's the pay page, update the cart display
+            if (pageId === 'pay') {
+                updateCartUI();
+            }
+        }
+        
+        // Function to add item to cart
+        function addToCart(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+
+            // Check if product is already in cart
+            const existingItem = cart.find(item => item.id === productId);
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                cart.push({
+                    id: product.id,
+                    name: product.name,
+                    price: product.price,
+                    image: product.image,
+                    quantity: 1
+                });
+            }
+
+            // Update cart UI
+            updateCartUI();
+
+            // Show quick feedback
+            const button = document.querySelector(`[onclick="addToCart(${productId})"]`);
+            if (button) {
+                const originalText = button.textContent;
+                button.textContent = 'Added';
+                button.disabled = true;
+
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.disabled = false;
+                }, 1000);
+            }
+        }
+
+        function removeFromCart(productId) {
+            const itemIndex = cart.findIndex(item => item.id === productId);
+            if (itemIndex !== -1) {
+                if (cart[itemIndex].quantity > 1) {
+                    cart[itemIndex].quantity -= 1;
+                } else {
+                    cart.splice(itemIndex, 1);
+                }
+                updateCartUI();
+            }
+        }
+
+        function updateCartUI() {
+            const cartBadge = document.getElementById('cart-counter');
+            const cartContainer = document.getElementById('cart-container');
+
+            // Calculate total quantity and price
+            const totalQuantity = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = subtotal >= 500 ? 0 : 40;
+            const discount = selectedCoupon ? selectedCoupon.discount : 0;
+            const totalPrice = subtotal + deliveryFee - discount;
+
+            // Update badge
+            cartBadge.textContent = totalQuantity;
+            if (totalQuantity > 0) {
+                cartBadge.classList.remove('hidden');
+            } else {
+                cartBadge.classList.add('hidden');
+            }
+
+            // Update cart container
+            if (cart.length === 0) {
+                cartContainer.innerHTML = `
+                    <h2 style="margin-bottom: 15px;">Your Cart</h2>
+                    <div class="empty-cart">
+                        <div class="empty-cart-icon">🛒</div>
+                        <div class="empty-cart-message">Your cart is empty</div>
+                        <button class="continue-shopping" onclick="showPage('dairy')">Continue Shopping</button>
+                    </div>
+                    <div style="border-top: 1px solid #eee; padding-top: 15px;">
+                        <p style="font-weight: bold; margin-bottom: 10px;">Total: ₹0</p>
+                        <button style="background-color: #2874f0; color: white; border: none; padding: 12px 20px; border-radius: 4px; width: 100%; font-weight: bold; cursor: pointer; opacity: 0.5;" disabled>
+                            Proceed to Payment
+                        </button>
+                    </div>
+                `;
+            } else {
+                let cartHTML = `
+                    <h2 style="margin-bottom: 15px;">Your Cart</h2>
+                    <div id="cart-items" style="margin-bottom: 20px;">
+                `;
+
+                // Add cart items
+                cart.forEach(item => {
+                    cartHTML += `
+                        <div class="cart-item">
+                            <div class="cart-item-image">
+                                <img src="${item.image}" alt="${item.name}">
+                            </div>
+                            <div class="cart-item-details">
+                                <div class="cart-item-name">${item.name}</div>
+                                <div class="cart-item-price">₹${item.price} × ${item.quantity}</div>
+                            </div>
+                            <div class="quantity-controls">
+                                <button class="quantity-button decrease-button" onclick="removeFromCart(${item.id})">−</button>
+                                <span class="quantity">${item.quantity}</span>
+                                <button class="quantity-button increase-button" onclick="addToCart(${item.id})">+</button>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                // Add coupon section
+                cartHTML += `
+                    </div>
+                    <div class="coupon-section">
+                        <div class="coupon-header">
+                            <div class="coupon-title">Apply Coupon</div>
+                        </div>
+                        <div class="apply-coupon">
+                            <input type="text" class="coupon-input" placeholder="Enter coupon code" id="coupon-code">
+                            <button class="apply-button" id="apply-coupon">Apply</button>
+                        </div>
+                        <div class="coupon-list" id="coupon-list">
+                            ${coupons.map(coupon => `
+                                <div class="coupon-item">
+                                    <input type="radio" name="selected-coupon" value="${coupon.code}" 
+                                        ${selectedCoupon?.code === coupon.code ? 'checked' : ''}>
+                                    <div class="coupon-details">
+                                        <div class="coupon-code">${coupon.code}</div>
+                                        <div class="coupon-description">${coupon.description}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `;
+
+                // Add cart summary
+                cartHTML += `
+                    <div class="cart-summary">
+                        <div class="summary-row">
+                            <div>Subtotal</div>
+                            <div>₹${subtotal}</div>
+                        </div>
+                        <div class="summary-row">
+                            <div>Delivery</div>
+                            <div>${deliveryFee === 0 ? 'FREE' : '₹' + deliveryFee}</div>
+                        </div>
+                        ${selectedCoupon ? `
+                        <div class="summary-row">
+                            <div>Coupon Discount (${selectedCoupon.code})</div>
+                            <div>-₹${selectedCoupon.discount}</div>
+                        </div>
+                        ` : ''}
+                        <div class="total-row">
+                            <div>Total</div>
+                            <div>₹${totalPrice}</div>
+                        </div>
+                        <button class="checkout-button" id="proceed-checkout" onclick="showCheckoutForm()">Proceed to Checkout</button>
+                    </div>
+                `;
+
+                cartContainer.innerHTML = cartHTML;
+
+                // Add event listener to apply coupon button
+                document.getElementById('apply-coupon').addEventListener('click', function() {
+                    const couponCode = document.getElementById('coupon-code').value.trim();
+                    const coupon = coupons.find(c => c.code === couponCode);
+
+                    if (coupon) {
+                        selectedCoupon = coupon;
+                        updateCartUI();
+                        alert(`Coupon ${coupon.code} applied successfully!`);
+                    } else {
+                        alert('Invalid coupon code. Please try again.');
+                    }
+                });
+
+                // Add event listener to coupon radio buttons
+                document.querySelectorAll('input[name="selected-coupon"]').forEach(radio => {
+                    radio.addEventListener('change', function() {
+                        if (this.checked) {
+                            const couponCode = this.value;
+                            selectedCoupon = coupons.find(c => c.code === couponCode);
+                            updateCartUI();
+                        }
+                    });
+                });
+            }
+        }
+
+        // Show checkout form
+        function showCheckoutForm() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = subtotal >= 500 ? 0 : 40;
+            const discount = selectedCoupon ? selectedCoupon.discount : 0;
+            const totalPrice = subtotal + deliveryFee - discount;
+
+            const checkoutHTML = `
+                <h2>Delivery Information</h2>
+                
+                <div class="saved-addresses">
+                    <h3>Saved Addresses</h3>
+                    ${savedAddresses.map((address, index) => `
+                        <div class="address-option">
+                            <input type="radio" name="selected-address" id="address-${index}" 
+                                value="${index}" ${index === 0 ? 'checked' : ''}>
+                            <div class="address-details">
+                                <div class="address-type">${address.type}</div>
+                                <div class="address-text">${address.name}</div>
+                                <div class="address-text">${address.mobile}</div>
+                                <div class="address-text">${address.address}</div>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+                
+                <div class="form-group">
+                    <label for="delivery-instructions">Delivery Instructions (Optional)</label>
+                    <textarea id="delivery-instructions" placeholder="Any specific delivery instructions"></textarea>
+                </div>
+                
+                <h2>Payment Method</h2>
+                <div class="payment-options">
+                    <div class="payment-option">
+                        <input type="radio" name="payment-method" id="cod" value="cod" checked>
+                        <label for="cod">Cash on Delivery</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" name="payment-method" id="upi" value="upi">
+                        <label for="upi">UPI Payment</label>
+                    </div>
+                    <div class="payment-option">
+                        <input type="radio" name="payment-method" id="card" value="card">
+                        <label for="card">Credit/Debit Card</label>
+                    </div>
+                </div>
+                
+                <div class="order-summary">
+                    <div class="order-summary-title">Order Summary</div>
+                    ${cart.map(item => `
+                        <div class="order-summary-item">
+                            <div>${item.name} × ${item.quantity}</div>
+                            <div>₹${item.price * item.quantity}</div>
+                        </div>
+                    `).join('')}
+                    <div class="order-summary-item">
+                        <div>Delivery</div>
+                        <div>${deliveryFee === 0 ? 'FREE' : '₹' + deliveryFee}</div>
+                    </div>
+                    ${selectedCoupon ? `
+                    <div class="order-summary-item">
+                        <div>Coupon Discount</div>
+                        <div>-₹${selectedCoupon.discount}</div>
+                    </div>
+                    ` : ''}
+                    <div class="order-summary-total">
+                        <div>Total Payable</div>
+                        <div>₹${totalPrice}</div>
+                    </div>
+                </div>
+                
+                <div class="checkout-buttons">
+                    <button class="back-to-cart" onclick="showPage('pay')">Back to Cart</button>
+                    <button class="place-order" onclick="placeOrder()">Place Order</button>
+                </div>
+            `;
+
+            document.getElementById('cart-container').innerHTML = checkoutHTML;
+
+            // Initialize selected address
+            selectedAddress = savedAddresses[0];
+
+            // Add event listener to payment method radio buttons
+            document.querySelectorAll('input[name="payment-method"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    selectedPaymentMethod = this.value;
+                });
+            });
+
+            // Add event listener to address radio buttons
+            document.querySelectorAll('input[name="selected-address"]').forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.checked) {
+                        selectedAddress = savedAddresses[parseInt(this.value)];
+                    }
+                });
+            });
+        }
+
+        // Place order function
+        function placeOrder() {
+            const subtotal = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            const deliveryFee = subtotal >= 500 ? 0 : 40;
+            const discount = selectedCoupon ? selectedCoupon.discount : 0;
+            const totalPrice = subtotal + deliveryFee - discount;
+            const deliveryInstructions = document.getElementById('delivery-instructions')?.value || '';
+
+            // Prepare order details
+            const orderDetails = {
+                items: [...cart],
+                subtotal,
+                deliveryFee,
+                discount,
+                totalPrice,
+                address: selectedAddress,
+                paymentMethod: selectedPaymentMethod,
+                deliveryInstructions,
+                orderDate: new Date().toLocaleString(),
+                orderId: 'ORD' + Math.floor(Math.random() * 1000000)
+            };
+
+            // Show confirmation
+            showOrderConfirmation(orderDetails);
+
+            // Clear cart
+            cart = [];
+            selectedCoupon = null;
+            updateCartUI();
+        }
+
+        // Show order confirmation
+        function showOrderConfirmation(orderDetails) {
+            // Build order items list
+            const orderItemsHTML = orderDetails.items.map(item => `
+                <div class="order-summary-item">
+                    <div>${item.name} × ${item.quantity}</div>
+                    <div>₹${item.price * item.quantity}</div>
+                </div>
+            `).join('');
+
+                      const confirmationHTML = `
+                <h2>Order Confirmation</h2>
+                <div class="confirmation-message">
+                    <p>Thank you for your order!</p>
+                    <p>Your order has been placed successfully and will be delivered soon.</p>
+                </div>
+                
+                <div class="confirmation-details">
+                    <h3>Order Details</h3>
+                    <div id="confirmation-order-details">
+                        <div><strong>Order ID:</strong> ${orderDetails.orderId}</div>
+                        <div><strong>Order Date:</strong> ${orderDetails.orderDate}</div>
+                        ${orderItemsHTML}
+                        <div class="order-summary-item">
+                            <div>Delivery Fee:</div>
+                            <div>${orderDetails.deliveryFee === 0 ? 'FREE' : '₹' + orderDetails.deliveryFee}</div>
+                        </div>
+                        ${orderDetails.discount > 0 ? `
+                        <div class="order-summary-item">
+                            <div>Coupon Discount:</div>
+                            <div>-₹${orderDetails.discount}</div>
+                        </div>
+                        ` : ''}
+                        <div class="order-summary-total">
+                            <div>Total Paid:</div>
+                            <div>₹${orderDetails.totalPrice}</div>
+                        </div>
+                    </div>
+                    
+                    <h3>Delivery Information</h3>
+                    <div id="confirmation-address">
+                        <div><strong>${orderDetails.address.type}:</strong></div>
+                        <div>${orderDetails.address.name}</div>
+                        <div>${orderDetails.address.mobile}</div>
+                        <div>${orderDetails.address.address}</div>
+                        ${orderDetails.deliveryInstructions ? `
+                        <div><strong>Delivery Instructions:</strong> ${orderDetails.deliveryInstructions}</div>
+                        ` : ''}
+                    </div>
+                    
+                    <h3>Payment Method</h3>
+                    <div id="confirmation-payment">
+                        ${orderDetails.paymentMethod === 'cod' ? 'Cash on Delivery' : 
+                          orderDetails.paymentMethod === 'upi' ? 'UPI Payment' : 
+                          'Credit/Debit Card'}
+                    </div>
+                </div>
+                
+                <div class="confirmation-actions">
+                    <button class="continue-shopping" onclick="showPage('dairy')">Continue Shopping</button>
+                </div>
+            `;
+
+            document.getElementById('cart-container').innerHTML = confirmationHTML;
+        }
+    </script>
+</body>
+</html>
